@@ -22,6 +22,13 @@ end
 function startgame()
  mode="game" 
 	
+	player={
+	 track=1,
+	 shape=2,
+	 _x=-1,
+	 _y=111,
+	}
+	
 	bgstrips={}
 	for i=-8,127,8 do
 		add(bgstrips,{y=i})
@@ -32,10 +39,11 @@ end
 
 function draw_game()
 	cls(2)
-	bgroad()
+	draw_background()
+	draw_player()
 end
 
-function bgroad()
+function draw_background()
 	-- draw tracks
 	rectfill(20,0,43,127,15)
 	rectfill(52,0,75,127,15)
@@ -55,20 +63,107 @@ function bgroad()
 	for strip in all(bgstrips) do
 		rectfill(47,strip.y,48,strip.y+4,15)
 		rectfill(79,strip.y,80,strip.y+4,15)
-		 strip.y+=1		--todo: hero.spd
+		 strip.y+=1
 		 if strip.y>=128 then
 		 	strip.y=-8
    end
 	end
 end
+
+function draw_player()
+	if player.shape==0 then
+		_draw_ball()
+	elseif player.shape==1 then
+	 _draw_rectangle()
+	elseif player.shape==2 then
+	 _draw_square()
+	end
+end
+
+function _draw_ball()
+ local px=player._x
+ local py=player._y
+ 
+ -- shadow
+ ovalfill(px-3,py-1,px+4,py+1,5)
+ 
+ -- ball
+ ovalfill(px-3,py-7,px+4,py,10)
+ oval(px-3,py-7,px+4,py,9)
+ 
+ -- highlight
+ rectfill(px+1,py-5,px+2,py-4,7)
+end
+
+function _draw_rectangle()
+ local px=player._x
+ local py=player._y
+ 
+ -- shadow
+ rectfill(px-6,py-2,px+7,py+3,5)
+ line(px-7,py-1,px-7,py+2)
+ line(px+8,py-1,px+8,py+2)
+ 
+ -- rectangle floats
+ py-=14
+ 
+ -- rectangle
+ rectfill(px-6,py-2,px+7,py+3,11)
+ line(px-7,py-2,px-7,py+3,3)
+ line(px+8,py-2,px+8,py+3,3)
+ line(px-6,py-3,px+7,py-3,3)
+ line(px-6,py+4,px+7,py+4,3)
+ 
+ -- highlight
+ line(px+4,py-1,px+6,py-1,7)
+ pset(px+6,py,7)
+ 
+ -- anti-highlight
+ line(px-5,py+2,px-3,py+2,3)
+ pset(px-5,py+1,3)
+end
+
+function _draw_square()
+ local px=player._x
+ local py=player._y
+ 
+ -- shadow
+ rectfill(px-11,py,px+12,py+3,5)
+ line(px-10,py+4,px+11,py+4,5)
+
+ -- square
+ rectfill(px-10,py-22,px+11,py-1,12)
+ line(px-10,py-23,px+11,py-23,1)
+ line(px-10,py,px+11,py,1)
+ line(px-11,py-22,px-11,py-1,1)
+ line(px+12,py-22,px+12,py-1,1)
+end
+
 -->8
 -- update
 
 function update_game()
- 
+ if btnp(0) then
+  player.track-=1
+  if player.track<0 then
+  	player.track=0
+  end
+ end
+ if btnp(1) then
+  player.track+=1
+  if player.track>2 then
+  	player.track=2
+  end
+ end
+
+ if player.track==0 then
+ 	player._x=31
+ elseif player.track==1 then
+  player._x=63
+ elseif player.track==2 then
+  player._x=95
+ end
 end
--->8
--- objects
 -->8
 -- tools/helpers
 
