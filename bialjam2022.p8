@@ -56,6 +56,7 @@ function startgame()
 	obstacles={}
 	spawn_obstacle()
 	
+	update_speed()
 	change_player_music()
 end
 
@@ -187,11 +188,11 @@ end
 -- update
 
 function update_game()
- if timer%30==0 then
+ if timer%(30/speed)==0 then
  	score+=1
  end
  
- if timer%90==0 then
+ if timer%(90/speed)==0 then
   spawn_obstacle()
  end
  
@@ -233,9 +234,7 @@ function update_game()
  end
  
  if btnp(5) then
-  local shapes={1,2,3}
-  del(shapes,player.shape)
- 	player.shape=rnd(shapes)
+  change_shape()
  	change_player_music()
  end
  
@@ -249,7 +248,7 @@ function update_game()
  	
  	-- collision player and obstacle
  	if not obst.triggered and
- 	   obst.y==player._y then
+ 	   dot_line_coll(player._y,obst.y,obst.y-speed) then
 
  	 obst.triggered=true
  		if obst.pass==player._x and
@@ -268,6 +267,7 @@ function update_game()
 			
 		end
  end
+ update_speed()
 end
 
 function update_mainmenu()
@@ -334,6 +334,23 @@ end
 
 function change_player_music()
  music(3-player.shape)	
+end
+
+function dot_line_coll(ya,yb1,yb2)
+	return (ya<=yb1 and ya>=yb2)
+end
+
+function change_shape()
+ player.shape+=1
+ if player.shape>3 then
+ 	player.shape=1
+ end
+end
+
+function update_speed()
+ local spd_shp={2,1.5,1}
+ speed=spd_shp[player.shape]
+   +(flr(score/100))
 end
 -->8
 -- draw helpers
