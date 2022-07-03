@@ -80,8 +80,7 @@ function draw_game()
 	cls(2)
 	draw_background()
 	draw_strips(true)
-	draw_player()
-	draw_obstacles()
+ draw_player_n_obstacles()
 	draw_score()
 end
 
@@ -142,15 +141,10 @@ function draw_strips(animate)
 	end
 end
 
---function draw_player_n_obstacles()
--- local drew_player=false
--- for i=#obstacles,1,-1 do
---  local obstacle=obstacles[i]
---  if not drew_player and
---    
---  	sspr(0,8,128,40,0,obstacle.y-39)
--- end
---end
+function draw_player_n_obstacles()
+	draw_player()
+	draw_obstacles()
+end
 
 function draw_player()
 	if player.shape==1 then
