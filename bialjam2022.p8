@@ -167,7 +167,8 @@ end
 
 function draw_score()
  local s = "score: "..score
-	cprint(s,8,1)
+ draw_box(36,4,127-36,16,2,15)
+	cprint(s,8,15)
 end
 
 function draw_obstacles()
@@ -473,12 +474,13 @@ function _draw_segment(y,t,s)
 end
 
 function draw_box(x1,y1,x2,y2,c1,c2)
- rectfill(x1,y1,x2,y2,c1)
  rect(x1+1,y1+1,x2-1,y2-1,c2)
- pset(x1,y1,c2)
- pset(x2,y1,c2)
- pset(x1,y2,c2)
- pset(x2,y2,c2)
+ rectfill(x1+2,y1+2,x2-2,y2-2,c1)
+ 
+ line(x1+1,y1,x2-1,y1,c1)
+ line(x1+1,y2,x2-1,y2,c1)
+ line(x1,y1+1,x1,y2-1,c1)
+ line(x2,y1+1,x2,y2-1,c1)
 end
 __gfx__
 00000000000000000005555555555000555555555777777755555555555555550000000000000000000000000000000000000000000000000000000000000000
