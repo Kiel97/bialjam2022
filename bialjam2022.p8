@@ -76,6 +76,7 @@ end
 
 function draw_mainmenu()
 	cls(2)
+	local col={9,11,12}
 	
 	rectfill(35,40,92,52,15)
 	rect(36,41,91,51,2)
@@ -84,7 +85,7 @@ function draw_mainmenu()
 	pset(92,52,2)
 	pset(92,40,2)
 	
-	cprint("highway",44,title_shape+9)
+	cprint("highway",44,col[title_shape])
 	cprint("press ❎ to start!",67,15)
 	cprint("or 🅾️ to reverse controls",78,15)
 	print("bialjam 2022  it just works\"tm\"",3,120)
