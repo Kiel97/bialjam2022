@@ -7,6 +7,7 @@ __lua__
 function _init()
  mainmenu()
  timer=0
+ score=0
  reversed_controls=false
 end
 
@@ -78,13 +79,7 @@ function draw_mainmenu()
 	cls(2)
 	local col={9,11,12}
 	
-	rectfill(35,40,92,52,15)
-	rect(36,41,91,51,2)
-	pset(35,40,2)
-	pset(35,52,2)
-	pset(92,52,2)
-	pset(92,40,2)
-	
+	draw_box(35,40,92,52,15,2)
 	cprint("highway",44,col[title_shape])
 	cprint("press ❎ to start!",67,15)
 	cprint("or 🅾️ to reverse controls",78,15)
@@ -94,9 +89,12 @@ end
 
 function draw_gameover()
 	cls(2)
-	draw_background()
-	draw_strips(false)
-	cprint("game over",60)
+	
+	draw_box(35,50,90,62,15,2)
+	cprint("game over!!",54,2)
+	cprint("score: "..score,66,15)
+	cprint("press ❎ to start again!",98,15)
+	cprint("or 🅾️ to reverse controls",108,15)
 end
 
 function draw_background()
@@ -270,7 +268,13 @@ function update_mainmenu()
 end
 
 function update_gameover()
-	
+	if btnp(5) then
+	 reversed_controls=false
+	 startgame()
+	elseif btnp(4) then
+	 reversed_controls=true
+	 startgame()
+	end
 end
 -->8
 -- tools/helpers
@@ -408,6 +412,15 @@ function _draw_segment(y,t,s)
 
 	map(mapx,mapy,t_x[t],
 	  y-24,4,3)
+end
+
+function draw_box(x1,y1,x2,y2,c1,c2)
+ rectfill(x1,y1,x2,y2,c1)
+ rect(x1+1,y1+1,x2-1,y2-1,c2)
+ pset(x1,y1,c2)
+ pset(x2,y1,c2)
+ pset(x1,y2,c2)
+ pset(x2,y2,c2)
 end
 __gfx__
 00000000000000000005555555555000555555555777777755555555555555550000000000000000000000000000000000000000000000000000000000000000
