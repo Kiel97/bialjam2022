@@ -37,7 +37,8 @@ function startgame()
  score=0
  speed=1
  timer=0
-	
+ next_100=1
+ 
 	player={
 	 track=1,
 	 shape=1,
@@ -62,6 +63,7 @@ end
 
 function gameover()
 	mode="gameover"
+	cooler=50
 	music(-1)
 	sfx(3)
 end
@@ -101,8 +103,11 @@ function draw_gameover()
 	draw_box(35,50,90,62,15,2)
 	cprint("game over!!",54,2)
 	cprint("score: "..score,66,15)
-	cprint("press ❎ to start again!",98,15)
-	cprint("or 🅾️ to reverse controls",108,15)
+	
+	if cooler<=0 then
+	 cprint("press ❎ to start again!",98,15)
+	 cprint("or 🅾️ to reverse controls",108,15)
+	end
 end
 
 function draw_background()
@@ -190,9 +195,14 @@ end
 function update_game()
  if timer%(30/speed)==0 then
  	score+=1
+ 	if (score/100)>0 and
+ 	  next_100<(score/100) then
+ 		sfx(7)
+ 		next_100+=1
+		end
  end
  
- if timer%(90/speed)==0 then
+ if timer%(90/next_100)==0 then
   spawn_obstacle()
  end
  
@@ -201,16 +211,18 @@ function update_game()
    player.track-=1
    if player.track<1 then
   	 player.track=1
+   else
+   	sfx(1)
    end
-   sfx(1)
   end
   
   if btnp(1) then
    player.track+=1
    if player.track>3 then
   	 player.track=3
+   else
+   	sfx(1)
    end
-   sfx(1)
   end
   
  else
@@ -219,16 +231,18 @@ function update_game()
    player.track-=1
    if player.track<1 then
   	 player.track=1
+   else
+   	sfx(1)
    end
-   sfx(1)
   end
   
   if btnp(0) then
    player.track+=1
    if player.track>3 then
   	 player.track=3
+  	else
+   	sfx(1)
    end
-   sfx(1)
   end
   
  end
@@ -288,12 +302,15 @@ function update_mainmenu()
 end
 
 function update_gameover()
-	if btnp(5) then
-	 reversed_controls=false
-	 startgame()
-	elseif btnp(4) then
-	 reversed_controls=true
-	 startgame()
+ cooler-=1
+ if cooler<=0 then
+		if btnp(5) then
+		 reversed_controls=false
+		 startgame()
+		elseif btnp(4) then
+		 reversed_controls=true
+		 startgame()
+		end
 	end
 end
 -->8
@@ -652,6 +669,7 @@ __sfx__
 01040000070500a0500c0500f050070500a0500c0500f050070500a0500c0500f050070500a0500c0500f050070500a0500c0500f050070500a0500c0500f050070500a0500c0500f050070500a0500c0500f050
 01010000071300a1300c1300f130071300a1300c1300f130071300a1300c1300f130071300a1300c1300f130071300a1300c1300f130071300a1300c1300f130071300a1300c1300f130071300a1300c1300f130
 0003000024550275502b5502b5502e5502e5502e5502e5502b5502b55027550225501f55016500155001450014500005000050000500005000050000500005000050000500005000050000500005000050000500
+000200001a5501b5501c5501e550205502355025550275502955016550185501a5501b5501d5501f550215502555026550295502b5502d55018550195501c5501e55020550215502355025550275302a5502c550
 __music__
 03 02424344
 03 04424344
