@@ -8,7 +8,6 @@ function _init()
  mainmenu()
  timer=0
  score=0
- reversed_controls=false
 end
 
 function _update()
@@ -62,6 +61,7 @@ function startgame()
 end
 
 function gameover()
+ flip_display(false)
 	mode="gameover"
 	cooler=50
 	music(-1)
@@ -69,6 +69,7 @@ function gameover()
 end
 
 function mainmenu()
+ flip_display(false)
  mode="mainmenu"
  title_shape=1
  music(-1)
@@ -92,7 +93,7 @@ function draw_mainmenu()
 	draw_box(35,40,92,52,15,2)
 	cprint("highway",44,col[title_shape])
 	cprint("press ❎ to start!",67,15)
-	cprint("or 🅾️ to reverse controls",78,15)
+	cprint("or 🅾️ to reverse screen",78,15)
 	print("bialjam 2022  it just works\"tm\"",3,120)
 
 end
@@ -106,7 +107,7 @@ function draw_gameover()
 	
 	if cooler<=0 then
 	 cprint("press ❎ to start again!",98,15)
-	 cprint("or 🅾️ to reverse controls",108,15)
+	 cprint("or 🅾️ to reverse screen",108,15)
 	end
 end
 
@@ -163,7 +164,7 @@ end
 function	draw_next_shape_box()
  local col={11,12,10}
 	draw_box(-1,107,19,125,2,15)
- print("next",2,110,col[player.shape])
+ print("next",2,110,15)
 	print("❎",6,118,col[player.shape])
 end
 
@@ -213,45 +214,22 @@ function update_game()
   spawn_obstacle()
  end
  
- if not reversed_controls then
-  if btnp(0) then
-   player.track-=1
-   if player.track<1 then
-  	 player.track=1
-   else
-   	sfx(1)
-   end
+ if btnp(0) then
+  player.track-=1
+  if player.track<1 then
+ 	 player.track=1
+  else
+  	sfx(1)
   end
-  
-  if btnp(1) then
-   player.track+=1
-   if player.track>3 then
-  	 player.track=3
-   else
-   	sfx(1)
-   end
-  end
-  
- else
+ end
  
-  if btnp(1) then
-   player.track-=1
-   if player.track<1 then
-  	 player.track=1
-   else
-   	sfx(1)
-   end
+ if btnp(1) then
+  player.track+=1
+  if player.track>3 then
+ 	 player.track=3
+  else
+  	sfx(1)
   end
-  
-  if btnp(0) then
-   player.track+=1
-   if player.track>3 then
-  	 player.track=3
-  	else
-   	sfx(1)
-   end
-  end
-  
  end
  
  if btnp(5) then
@@ -292,11 +270,10 @@ function update_game()
 end
 
 function update_mainmenu()
-	if btnp(5) then
-	 reversed_controls=false
+	if btnp(5) then  -- ❎
 	 startgame()
-	elseif btnp(4) then
-	 reversed_controls=true
+	elseif btnp(4) then -- 🅾️
+	 flip_display(true)
 	 startgame()
 	end
 	
@@ -311,12 +288,11 @@ end
 function update_gameover()
  cooler-=1
  if cooler<=0 then
-		if btnp(5) then
-		 reversed_controls=false
+		if btnp(5) then -- ❎
 		 startgame()
-		elseif btnp(4) then
-		 reversed_controls=true
-		 startgame()
+		elseif btnp(4) then -- 🅾️
+   flip_display(true)
+ 		startgame()
 		end
 	end
 end
@@ -375,6 +351,14 @@ function update_speed()
  local spd_shp={2,1.5,1}
  speed=spd_shp[player.shape]
    +(flr(score/100))
+end
+
+function flip_display(value)
+	if value then
+  poke(0x5f2c,131)
+	else
+  poke(0x5f2c,0)
+	end
 end
 -->8
 -- draw helpers
@@ -488,6 +472,7 @@ function draw_box(x1,y1,x2,y2,c1,c2)
  line(x1,y1+1,x1,y2-1,c1)
  line(x2,y1+1,x2,y2-1,c1)
 end
+
 __gfx__
 00000000000000000005555555555000555555555777777755555555555555550000000000000000000000000000000000000000000000000000000000000000
 00000000000000000057777777777500777777775777777777778888888877770000000000000000000000000000000000000000000000000000000000000000
